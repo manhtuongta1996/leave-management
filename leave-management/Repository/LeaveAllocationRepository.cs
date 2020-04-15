@@ -41,7 +41,9 @@ namespace leave_management.Repository
 
         public ICollection<LeaveAllocation> FindAll()
         {
-            var LeaveAllocations = _db.LeaveAllocations.Include(q =>q.LeaveType).Include(q => q.Employee).ToList();
+            var LeaveAllocations = _db.LeaveAllocations
+                .Include(q =>q.LeaveType)
+                .Include(q => q.Employee).ToList();
             return LeaveAllocations;
         }
 
@@ -61,6 +63,13 @@ namespace leave_management.Repository
                         .Where(q => q.EmployeeId == id && q.Period == period )
                         .ToList();
            
+        }
+
+        public LeaveAllocation GetLeaveAllocationsByEmployeeAndType(string id, int leavetypeId)
+        {
+            var period = DateTime.Now.Year;
+            return FindAll()
+                        .FirstOrDefault(q => q.EmployeeId == id && q.Period == period && q.LeaveTypeId == leavetypeId);                       
         }
 
         public bool IsExists(int id)
